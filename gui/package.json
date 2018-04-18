@@ -1,0 +1,42 @@
+{
+  "name": "gui",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "wp": "node node_modules\\webpack\\bin\\webpack.js --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skellock/typescript-with-electron-react-kit.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/skellock/typescript-with-electron-react-kit/issues"
+  },
+  "homepage": "https://github.com/skellock/typescript-with-electron-react-kit#readme",
+  "devDependencies": {
+    "awesome-typescript-loader": "^3.5.0",
+    "css-loader": "^0.28.11",
+    "electron": "^1.8.4",
+    "style-loader": "^0.20.3",
+    "typescript": "^2.8.1",
+    "webpack": "^3.11.0"
+  },
+  "dependencies": {
+    "@types/react": "^16.1.0",
+    "@types/react-dom": "^16.0.4",
+    "material-ui": "^1.0.0-beta.39",
+    "mobx": "^4.1.1",
+    "mobx-react": "^5.0.0",
+    "react": "^16.3.0",
+    "react-dom": "^16.3.0",
+    "react-treebeard": "^2.1.0"
+  }
+}
