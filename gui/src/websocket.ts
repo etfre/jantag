@@ -1,50 +1,5 @@
 // import {observable} from 'mobx';
-import {ServerFetch} from './types';
 declare var window: any;
-
-// let serverMessage = observable.ref(null);
-// export const connected = observable(false);
-// const wsUrl = `ws://${window.commandLineArgs.address}/ws`;
-const wsUrl = `ws://localhost:3922`;
-export const ws = new WebSocket(wsUrl);
-// const serverMessageQueue: string[] = [];
-const outstandingFetches = new Map<string, ServerFetch>();
-
-ws.onopen = () => {
-    (async() => {
-        const resp = await wsFetch('command modules')
-        console.log('res', resp)
-    })()
-}
-
-ws.onmessage = (ev) => {
-    const msg = JSON.parse(ev.data);
-    if (msg.hasOwnProperty('id')) {
-        if (!outstandingFetches.has(msg.id)) throw `Missing response id: ${msg.id}`;
-        const sf = outstandingFetches.get(msg.id) as ServerFetch;
-        outstandingFetches.delete(msg.id);
-        if (msg.ok) sf.resolve(msg.data);
-        else sf.reject(msg.data);
-    }
-    else {
-        //serverMessage;
-    }
-}
- 
-export function wsFetch(resource: string, args: any = [], kwargs: any = {}) {
-    if (ws.readyState !== WebSocket.OPEN) {
-        throw "Websocket connection not open";
-    }
-    const id = generateUUID();
-    const msgString = JSON.stringify({resource, id, args, kwargs});
-    const timestamp = Date.now();
-    const respPromise = new Promise((resolve, reject) => {
-        const sf: ServerFetch = {timestamp, resolve, reject};
-        outstandingFetches.set(id, sf);
-    });
-    ws.send(msgString);
-    return respPromise;
-}
 
 function generateUUID () {
     let d = new Date().getTime();
@@ -55,3 +10,49 @@ function generateUUID () {
         return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
     });
 }
+
+export class WebSocketHandler {
+
+    ws: WebSocket
+    subscriptions: Map<string, any>
+    sendQueue: any
+
+    constructor(url: string) {
+        this.ws = new WebSocket(url);
+        this.ws.onmessage = (msg) => this.dispatchSubscriptions(msg.data);
+        this.ws.onopen = () => {
+            for (const msg of this.sendQueue) {
+                this.ws.send(msg);
+            }
+            this.sendQueue = [];
+        }
+        this.subscriptions = new Map();
+        this.sendQueue = []
+    }
+
+    send(topic: string, data: any = null) {
+        const encodedMessage = JSON.stringify({topic, data});
+        if (this.ws.readyState === WebSocket.OPEN) {
+            this.ws.send(encodedMessage)
+        }
+        else {
+            this.sendQueue.push(encodedMessage);
+        }
+    }
+
+    subscribe(topic: string, cb: any) {
+        if (!this.subscriptions.has(topic)) this.subscriptions.set(topic, [])
+        this.subscriptions.get(topic).push(cb)
+    }
+
+    dispatchSubscriptions(encodedMessage: string) {
+        const msg = JSON.parse(encodedMessage);
+        console.log('magnificientg')
+        if (!this.subscriptions.has(msg.type)) return;
+        const subscriptionCallbacks = this.subscriptions.get(msg.type);
+        for (const cb of subscriptionCallbacks) {
+            cb(msg.data)
+        }
+    }
+
+ }

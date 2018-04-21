@@ -60,18 +60,18 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 656);
+/******/ 	return __webpack_require__(__webpack_require__.s = 486);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 656:
+/***/ 486:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const electron_1 = __webpack_require__(657);
+const electron_1 = __webpack_require__(487);
 const args = electron_1.remote.getGlobal('args');
 window.commandLineArgs = {
     address: args[2]
@@ -80,7 +80,7 @@ window.commandLineArgs = {
 
 /***/ }),
 
-/***/ 657:
+/***/ 487:
 /***/ (function(module, exports) {
 
 module.exports = require("electron");
