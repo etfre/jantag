@@ -1,21 +1,25 @@
 import React from 'react';
+import './app.css'
 import ReactDOM from 'react-dom';
 import { Button } from 'material-ui'
 import ImageTagger from './image-tagger';
 import { Treebeard } from 'react-treebeard';
 import { WebSocketHandler } from './websocket'
 
-class App extends React.Component<any, {}> {
+class App extends React.Component<any, any> {
 
     ws: WebSocketHandler
 
     onNewScreenshot = (data: any) => {
-        console.log('onss');
+        this.setState({screenShot: data})
     }
 
     constructor(params: any) {
         super(params);
         this.ws = new WebSocketHandler(`ws://localhost:3922`);
+        this.state = {
+            screenShot: null
+        }
     }
 
     componentDidMount() {
@@ -26,8 +30,8 @@ class App extends React.Component<any, {}> {
     render() {
         return (
             <div id="osspeak-application">
-                <Button>foo</Button>
-                <ImageTagger />
+                <Button>foob</Button>
+                <ImageTagger screenShot={this.state.screenShot} />
                 {/* <TreeExample /> */}
             </div>
         );

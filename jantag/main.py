@@ -26,7 +26,7 @@ def take_screenshot():
     ss = pyscreenshot.grab()
     buffered = io.BytesIO()
     ss.save(buffered, format="PNG")
-    base64_image = str(base64.b64encode(buffered.getvalue()))
+    base64_image = base64.b64encode(buffered.getvalue()).decode('utf8')
     data = {'data': base64_image}
     ws.send('NEW_SCREENSHOT', data)
 
