@@ -1,3 +1,6 @@
+from ctypes import windll
+windll.user32.SetProcessDPIAware()
+
 import keyboard
 import pyscreenshot
 import os
@@ -26,6 +29,7 @@ def take_screenshot():
     ss = pyscreenshot.grab()
     buffered = io.BytesIO()
     ss.save(buffered, format="PNG")
+    ss.save('banana.png', format='png')
     base64_image = base64.b64encode(buffered.getvalue()).decode('utf8')
     data = {'data': base64_image}
     ws.send('NEW_SCREENSHOT', data)
